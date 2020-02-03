@@ -2,6 +2,8 @@
 
 var MAP_PIN_WIDTH = 50;
 var MAP_PIN_HEIGHT = 70;
+var KEY_ENTER = 'Enter';
+var KEY_LEFT_MOUSE_BUTTON = 0;
 
 var offerTitles = [
   'First Cabin Kyobashi ',
@@ -58,9 +60,11 @@ var offerPhotos = [
 ];
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
 
 var mapPins = document.querySelector('.map__pins');
+var mapPinMain = map.querySelector('.map__pin--main');
+
+var adForm = document.querySelector('.ad-form');
 
 var pinTemplate = document.querySelector('#pin').content;
 var mapPin = pinTemplate.querySelector('.map__pin');
@@ -194,6 +198,73 @@ var createMapPins = function (array) {
 };
 
 var arraySimilarAds = createSimilarAds();
+
 var fragmentMapPins = createMapPins(arraySimilarAds);
 
-mapPins.appendChild(fragmentMapPins);
+/**
+ * @description
+ *  Deactivate all form on page
+ *
+ * @return {void}
+ */
+var deactivateForms = function () {
+  var pageForms = document.forms;
+
+  for (var i = 0; i < pageForms.length; i++) {
+    var currentForm = pageForms[i].children;
+
+    for (var j = 0; j < currentForm.length; j++) {
+      var currentFormChildren = currentForm[j];
+      currentFormChildren.setAttribute('disabled', '');
+    }
+  }
+};
+
+/**
+ * @description
+ *  Activate all form on page
+ *
+ * @return {void}
+ */
+var activateForms = function () {
+  var pageForms = document.forms;
+
+  for (var i = 0; i < pageForms.length; i++) {
+    var currentForm = pageForms[i].children;
+
+    for (var j = 0; j < currentForm.length; j++) {
+      var currentFormChildren = currentForm[j];
+      currentFormChildren.removeAttribute('disabled', '');
+    }
+  }
+};
+
+/**
+ * @description
+ *  Activate ad map
+ *
+ * @return {void}
+ */
+var activateMap = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  mapPins.appendChild(fragmentMapPins);
+  activateForms();
+};
+
+window.addEventListener('load', function () {
+  deactivateForms();
+});
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+  if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
+    activateMap();
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === KEY_ENTER) {
+    activateMap();
+  }
+});
+
