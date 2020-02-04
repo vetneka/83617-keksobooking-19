@@ -2,6 +2,11 @@
 
 var MAP_PIN_WIDTH = 50;
 var MAP_PIN_HEIGHT = 70;
+
+var MAP_PIN_MAIN_WIDTH = 65;
+var MAP_PIN_MAIN_HEIGHT = 65;
+var MAP_PIN_MAIN_POINTER_HEIGHT = 20;
+
 var KEY_ENTER = 'Enter';
 var KEY_LEFT_MOUSE_BUTTON = 0;
 
@@ -250,10 +255,45 @@ var activateMap = function () {
   adForm.classList.remove('ad-form--disabled');
   mapPins.appendChild(fragmentMapPins);
   activateForms();
+  adFormInputAddress.setAttribute('value', getCoordinateMapPinMain(true));
+};
+
+var adFormInputAddress = adForm.querySelector('#address');
+
+/**
+ * @description
+ *  Get coordinates map__pin--main in active/inactive state
+ *
+ * @param {boolean} [state=false] - state map pin: active (true), inactive (false)
+ * @return {string} - x, y coordinate
+ */
+var getCoordinateMapPinMain = function (state) {
+  var active = state || false;
+
+  var currentMapPinMain = mapPinMain.getBoundingClientRect();
+
+  var currentMapPinMainX;
+  var currentMapPinMainY;
+  var result;
+
+  if (active) {
+    var currentMapPinMainHeight = MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_POINTER_HEIGHT;
+
+    currentMapPinMainX = currentMapPinMain.left + (MAP_PIN_MAIN_WIDTH / 2);
+    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + currentMapPinMainHeight;
+  } else {
+    currentMapPinMainX = currentMapPinMain.left + (MAP_PIN_MAIN_WIDTH / 2);
+    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + (MAP_PIN_MAIN_HEIGHT / 2);
+  }
+
+  result = currentMapPinMainX + ', ' + currentMapPinMainY;
+
+  return result;
 };
 
 window.addEventListener('load', function () {
   deactivateForms();
+  adFormInputAddress.setAttribute('value', getCoordinateMapPinMain());
 });
 
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -267,4 +307,3 @@ mapPinMain.addEventListener('keydown', function (evt) {
     activateMap();
   }
 });
-
