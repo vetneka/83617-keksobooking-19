@@ -291,9 +291,59 @@ var getCoordinateMapPinMain = function (state) {
   return result;
 };
 
+var roomNumber = adForm.querySelector('#room_number');
+var capacity = adForm.querySelector('#capacity');
+var capacityOptions = capacity.options;
+
+/**
+ * @description
+ *  Setting a match between fields: roomNumber & capacity
+ *
+ * @return {void}
+ */
+var onChangeRoomSelect = function () {
+  for (var i = 0; i < capacityOptions.length; i++) {
+    var currentCapatityOption = capacityOptions[i];
+    if (currentCapatityOption.selected === false) {
+      currentCapatityOption.setAttribute('disabled', '');
+    }
+  }
+
+  roomNumber.addEventListener('change', function (evt) {
+    for (var j = 0; j < capacityOptions.length; j++) {
+      var currentCapacityOption = capacityOptions[j];
+      currentCapacityOption.removeAttribute('disabled', '');
+    }
+
+    var currentRoom = +evt.target.value;
+
+    for (var k = 0; k < capacityOptions.length; k++) {
+      var currentCapacityOptionValue = +capacityOptions[k].value;
+      currentCapacityOption = capacityOptions[k];
+
+      if (currentRoom === 100) {
+        currentCapacityOption.setAttribute('disabled', '');
+
+        if (currentCapacityOptionValue === 0) {
+          currentCapacityOption.removeAttribute('disabled', '');
+        }
+      } else if (currentRoom < currentCapacityOptionValue || currentCapacityOptionValue === 0) {
+        currentCapacityOption.setAttribute('disabled', '');
+      }
+
+      if (currentCapacityOption.disabled === false) {
+        capacity.value = currentCapacityOption.value;
+      }
+    }
+  });
+};
+
 window.addEventListener('load', function () {
   deactivateForms();
+
   adFormInputAddress.setAttribute('value', getCoordinateMapPinMain());
+
+  onChangeRoomSelect();
 });
 
 mapPinMain.addEventListener('mousedown', function (evt) {
