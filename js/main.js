@@ -3,6 +3,13 @@
 var MAP_PIN_WIDTH = 50;
 var MAP_PIN_HEIGHT = 70;
 
+var MAP_PIN_MAIN_WIDTH = 65;
+var MAP_PIN_MAIN_HEIGHT = 65;
+var MAP_PIN_MAIN_POINTER_HEIGHT = 20;
+
+var KEY_ENTER = 'Enter';
+var KEY_LEFT_MOUSE_BUTTON = 0;
+
 var offerTitles = [
   'First Cabin Kyobashi ',
   'Residential stage Higashi Shinjuku 1204',
@@ -58,9 +65,11 @@ var offerPhotos = [
 ];
 
 var map = document.querySelector('.map');
-map.classList.remove('map--faded');
 
 var mapPins = document.querySelector('.map__pins');
+var mapPinMain = map.querySelector('.map__pin--main');
+
+var adForm = document.querySelector('.ad-form');
 
 var pinTemplate = document.querySelector('#pin').content;
 var mapPin = pinTemplate.querySelector('.map__pin');
@@ -194,6 +203,157 @@ var createMapPins = function (array) {
 };
 
 var arraySimilarAds = createSimilarAds();
+
 var fragmentMapPins = createMapPins(arraySimilarAds);
 
-mapPins.appendChild(fragmentMapPins);
+/**
+ * @description
+ *  Deactivate all form on page
+ *
+ * @return {void}
+ */
+var deactivateForms = function () {
+  var pageForms = document.forms;
+
+  for (var i = 0; i < pageForms.length; i++) {
+    var currentForm = pageForms[i].children;
+
+    for (var j = 0; j < currentForm.length; j++) {
+      var currentFormChildren = currentForm[j];
+      currentFormChildren.setAttribute('disabled', '');
+    }
+  }
+};
+
+/**
+ * @description
+ *  Activate all form on page
+ *
+ * @return {void}
+ */
+var activateForms = function () {
+  var pageForms = document.forms;
+
+  for (var i = 0; i < pageForms.length; i++) {
+    var currentForm = pageForms[i].children;
+
+    for (var j = 0; j < currentForm.length; j++) {
+      var currentFormChildren = currentForm[j];
+      currentFormChildren.removeAttribute('disabled', '');
+    }
+  }
+};
+
+/**
+ * @description
+ *  Activate ad map
+ *
+ * @return {void}
+ */
+var activateMap = function () {
+  map.classList.remove('map--faded');
+  adForm.classList.remove('ad-form--disabled');
+  mapPins.appendChild(fragmentMapPins);
+  activateForms();
+  adFormInputAddress.setAttribute('value', getCoordinateMapPinMain(true));
+};
+
+var adFormInputAddress = adForm.querySelector('#address');
+
+/**
+ * @description
+ *  Get coordinates map__pin--main in active/inactive state
+ *
+ * @param {boolean} [state=false] - state map pin: active (true), inactive (false)
+ * @return {string} - x, y coordinate
+ */
+var getCoordinateMapPinMain = function (state) {
+  var active = state || false;
+
+  var currentMapPinMain = mapPinMain.getBoundingClientRect();
+
+  var currentMapPinMainX;
+  var currentMapPinMainY;
+  var result;
+
+  if (active) {
+    var currentMapPinMainHeight = MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_POINTER_HEIGHT;
+
+    currentMapPinMainX = currentMapPinMain.left + (MAP_PIN_MAIN_WIDTH / 2);
+    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + currentMapPinMainHeight;
+  } else {
+    currentMapPinMainX = currentMapPinMain.left + (MAP_PIN_MAIN_WIDTH / 2);
+    currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + (MAP_PIN_MAIN_HEIGHT / 2);
+  }
+
+  result = currentMapPinMainX + ', ' + currentMapPinMainY;
+
+  return result;
+};
+
+var roomNumber = adForm.querySelector('#room_number');
+var capacity = adForm.querySelector('#capacity');
+var capacityOptions = capacity.options;
+
+/**
+ * @description
+ *  Setting a match between fields: roomNumber & capacity
+ *
+ * @return {void}
+ */
+var onChangeRoomSelect = function () {
+  for (var i = 0; i < capacityOptions.length; i++) {
+    var currentCapatityOption = capacityOptions[i];
+    if (currentCapatityOption.selected === false) {
+      currentCapatityOption.setAttribute('disabled', '');
+    }
+  }
+
+  roomNumber.addEventListener('change', function (evt) {
+    for (var j = 0; j < capacityOptions.length; j++) {
+      var currentCapacityOption = capacityOptions[j];
+      currentCapacityOption.removeAttribute('disabled', '');
+    }
+
+    var currentRoom = +evt.target.value;
+
+    for (var k = 0; k < capacityOptions.length; k++) {
+      var currentCapacityOptionValue = +capacityOptions[k].value;
+      currentCapacityOption = capacityOptions[k];
+
+      if (currentRoom === 100) {
+        currentCapacityOption.setAttribute('disabled', '');
+
+        if (currentCapacityOptionValue === 0) {
+          currentCapacityOption.removeAttribute('disabled', '');
+        }
+      } else if (currentRoom < currentCapacityOptionValue || currentCapacityOptionValue === 0) {
+        currentCapacityOption.setAttribute('disabled', '');
+      }
+
+      if (currentCapacityOption.disabled === false) {
+        capacity.value = currentCapacityOption.value;
+      }
+    }
+  });
+};
+
+window.addEventListener('load', function () {
+  deactivateForms();
+
+  adFormInputAddress.setAttribute('value', getCoordinateMapPinMain());
+
+  onChangeRoomSelect();
+});
+
+mapPinMain.addEventListener('mousedown', function (evt) {
+  if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
+    activateMap();
+  }
+});
+
+mapPinMain.addEventListener('keydown', function (evt) {
+  if (evt.key === KEY_ENTER) {
+    activateMap();
+  }
+});
