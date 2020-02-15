@@ -247,52 +247,100 @@ var createAdCard = function (array) {
   popupTextTime.textContent = 'Заезд после ' + currentAd.offer.checkin + ' выезд до ' + currentAd.offer.checkout;
 
   // Create card features
+  var featuresFragment = document.createDocumentFragment();
+
   var popupFeatures = cardNode.querySelector('.popup__features');
-  var resultStringFeatures = '';
+
+  var featureWiFi = popupFeatures.querySelector('.popup__feature--wifi');
+  var featureDishwasher = popupFeatures.querySelector('.popup__feature--dishwasher');
+  var featureParking = popupFeatures.querySelector('.popup__feature--parking');
+  var featureWasher = popupFeatures.querySelector('.popup__feature--washer');
+  var featureElevator = popupFeatures.querySelector('.popup__feature--elevator');
+  var featureConditioner = popupFeatures.querySelector('.popup__feature--conditioner');
+
+  for (var i = popupFeatures.children.length - 1; i >= 0; i--) {
+    var currentFeatureChild = popupFeatures.children[i];
+    popupFeatures.removeChild(currentFeatureChild);
+  }
+
   var featuresLength = currentAd.offer.features.length;
 
   if (featuresLength === 0) {
     popupFeatures.style.display = 'none';
   } else {
-    for (var i = 0; i < featuresLength; i++) {
-      var currentFeature = currentAd.offer.features[i];
 
-      if (i < featuresLength - 1) {
-        resultStringFeatures += currentFeature + ', ';
-      } else {
-        resultStringFeatures += currentFeature;
+    for (var j = 0; j < featuresLength; j++) {
+      var currentFeature = currentAd.offer.features[j];
+
+      switch (currentFeature) {
+        case 'wifi':
+          featureWiFi.textContent = currentFeature;
+          featuresFragment.appendChild(featureWiFi);
+          break;
+
+        case 'dishwasher':
+          featureDishwasher.textContent = 'dishwasher';
+          featuresFragment.appendChild(featureDishwasher);
+          break;
+
+        case 'parking':
+          featureParking.textContent = currentFeature;
+          featuresFragment.appendChild(featureParking);
+          break;
+
+        case 'washer':
+          featureWasher.textContent = currentFeature;
+          featuresFragment.appendChild(featureWasher);
+          break;
+
+        case 'elevator':
+          featureElevator.textContent = currentFeature;
+          featuresFragment.appendChild(featureElevator);
+          break;
+
+        case 'conditioner':
+          featureConditioner.textContent = currentFeature;
+          featuresFragment.appendChild(featureConditioner);
+          break;
+
+        default:
+          break;
       }
     }
   }
 
-  popupFeatures.textContent = resultStringFeatures;
+  popupFeatures.appendChild(featuresFragment);
 
   // Create card description
+
   var popupDescription = cardNode.querySelector('.popup__description');
   popupDescription.textContent = currentAd.offer.description;
 
   // Create card photos
-  var popupPhotos = cardNode.querySelector('.popup__photos');
-  var popupPhoto = cardNode.querySelector('.popup__photo');
-  var popupPhotosLength = currentAd.offer.photos.length;
+  var photoFragment = document.createDocumentFragment();
 
-  var fragment = document.createDocumentFragment();
+  var popupPhotos = cardNode.querySelector('.popup__photos');
+  var templatePopupPhoto = cardNode.querySelector('.popup__photo');
+
+  for (var m = popupPhotos.children.length - 1; m >= 0; m--) {
+    var currentPhotoChild = popupPhotos.children[m];
+    popupPhotos.removeChild(currentPhotoChild);
+  }
+
+  var popupPhotosLength = currentAd.offer.photos.length;
 
   if (popupPhotosLength === 0) {
     popupPhotos.style.display = 'none';
   } else {
-    for (var j = 0; j < popupPhotosLength; j++) {
-      var photo = popupPhoto.cloneNode(true);
-      photo.setAttribute('src', currentAd.offer.photos[j]);
+    for (var k = 0; k < popupPhotosLength; k++) {
+      var photo = templatePopupPhoto.cloneNode();
+      photo.setAttribute('src', currentAd.offer.photos[k]);
 
-      fragment.appendChild(photo);
+      photoFragment.appendChild(photo);
     }
   }
 
-  var popupPhotosFirstChild = popupPhotos.firstElementChild;
-  popupPhotosFirstChild.remove();
-
-  popupPhotos.appendChild(fragment);
+  popupPhotos.appendChild(photoFragment);
 
   // Create card avatar
   var popupAvatar = cardNode.querySelector('.popup__avatar');
