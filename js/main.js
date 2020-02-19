@@ -200,7 +200,7 @@ var createSimilarAds = function (number) {
  * @description
  *  Create advertisement card
  *
- * @param {array} array - array of objects (advertisements) for creating card
+ * @param {object} object - array of objects (advertisements) for creating card
  *
  * @return {object} - DOM-element for adding to page
  */
@@ -209,43 +209,72 @@ var createAdCard = function (object) {
 
   // Create card title
   var popupTitle = cardNode.querySelector('.popup__title');
-  popupTitle.textContent = object.offer.title;
+
+  if (object.offer.title === '') {
+    popupTitle.style.display = 'none';
+  } else {
+    popupTitle.textContent = object.offer.title;
+  }
 
   // Create card address
   var popupTextAddress = cardNode.querySelector('.popup__text--address');
-  popupTextAddress.textContent = object.offer.address;
+
+  if (object.offer.address === '') {
+    popupTextAddress.style.display = 'none';
+  } else {
+    popupTextAddress.textContent = object.offer.address;
+  }
 
   // Create card price
   var popupTextPrice = cardNode.querySelector('.popup__text--price');
-  popupTextPrice.textContent = object.offer.price + '₽/ночь';
+
+  if (object.offer.price === '') {
+    popupTextPrice.style.display = 'none';
+  } else {
+    popupTextPrice.textContent = object.offer.price + '₽/ночь';
+  }
 
   // Create card room type
   var popupType = cardNode.querySelector('.popup__type');
 
-  switch (object.offer.type) {
-    case 'bungalo':
-      popupType.textContent = 'Бунгало';
-      break;
+  if (object.offer.type === '') {
+    popupType.style.display = 'none';
+  } else {
+    switch (object.offer.type) {
+      case 'bungalo':
+        popupType.textContent = 'Бунгало';
+        break;
 
-    case 'palace':
-      popupType.textContent = 'Дворец';
-      break;
+      case 'palace':
+        popupType.textContent = 'Дворец';
+        break;
 
-    case 'house':
-      popupType.textContent = 'Дом';
-      break;
+      case 'house':
+        popupType.textContent = 'Дом';
+        break;
 
-    default: popupType.textContent = 'Квартира';
-      break;
+      default: popupType.textContent = 'Квартира';
+        break;
+    }
   }
 
   // Create card capacity
   var popupTextCapacity = cardNode.querySelector('.popup__text--capacity');
-  popupTextCapacity.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
+
+  if (object.offer.rooms === '' || object.offer.guests === '') {
+    popupTextCapacity.style.display = 'none';
+  } else {
+    popupTextCapacity.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
+  }
 
   // Create card checkin/checkout time
   var popupTextTime = cardNode.querySelector('.popup__text--time');
-  popupTextTime.textContent = 'Заезд после ' + object.offer.checkin + ' выезд до ' + object.offer.checkout;
+
+  if (object.offer.checkin === '' || object.offer.checkout === '') {
+    popupTextTime.style.display = 'none';
+  } else {
+    popupTextTime.textContent = 'Заезд после ' + object.offer.checkin + ' выезд до ' + object.offer.checkout;
+  }
 
   // Create card features
   var featuresFragment = document.createDocumentFragment();
@@ -314,7 +343,12 @@ var createAdCard = function (object) {
 
   // Create card description
   var popupDescription = cardNode.querySelector('.popup__description');
-  popupDescription.textContent = object.offer.description;
+
+  if (object.offer.description === '') {
+    popupDescription.style.display = 'none';
+  } else {
+    popupDescription.textContent = object.offer.description;
+  }
 
   // Create card photos
   var photoFragment = document.createDocumentFragment();
@@ -344,7 +378,12 @@ var createAdCard = function (object) {
 
   // Create card avatar
   var popupAvatar = cardNode.querySelector('.popup__avatar');
-  popupAvatar.setAttribute('src', object.author.avatar);
+
+  if (object.author.avatar === '') {
+    popupAvatar.style.display = 'none';
+  } else {
+    popupAvatar.setAttribute('src', object.author.avatar);
+  }
 
   return cardNode;
 };
