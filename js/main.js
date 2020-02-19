@@ -11,6 +11,8 @@ var KEY_ESCAPE = 'Escape';
 var KEY_ENTER = 'Enter';
 var KEY_LEFT_MOUSE_BUTTON = 0;
 
+var MIN_INPUT_TITLE_LENGTH = 30;
+
 var offerTitles = [
   'First Cabin Kyobashi ',
   'Residential stage Higashi Shinjuku 1204',
@@ -267,6 +269,7 @@ var createAdCard = function (object) {
   if (featuresLength === 0) {
     popupFeatures.style.display = 'none';
   } else {
+
     for (var j = 0; j < featuresLength; j++) {
       var currentFeature = object.offer.features[j];
 
@@ -570,9 +573,149 @@ var getCoordinateMapPinMain = function (state) {
   return result;
 };
 
+var inputTitle = adForm.querySelector('#title');
+
 var roomNumber = adForm.querySelector('#room_number');
 var capacity = adForm.querySelector('#capacity');
 var capacityOptions = capacity.options;
+
+var selectRoomType = adForm.querySelector('#type');
+var inputRoomPrice = adForm.querySelector('#price');
+
+var selectTimeIn = adForm.querySelector('#timein');
+var selectTimeOut = adForm.querySelector('#timeout');
+
+var inputFileAvatar = adForm.querySelector('#avatar');
+var inputFileImages = adForm.querySelector('#images');
+
+inputTitle.addEventListener('invalid', function (evt) {
+  inputTitle.classList.add('invalid');
+
+  if (inputTitle.validity.valueMissing) {
+    inputTitle.setCustomValidity('Это обязательное поле');
+  } else if (inputTitle.validity.tooShort) {
+    inputTitle.setCustomValidity('Длина заголовка должна быть больше ' + MIN_INPUT_TITLE_LENGTH + ' символов, а сейчас ' + evt.target.selectionStart + '/' + MIN_INPUT_TITLE_LENGTH);
+  } else {
+    inputTitle.setCustomValidity('');
+    inputTitle.classList.remove('invalid');
+  }
+});
+
+inputTitle.addEventListener('input', function () {
+  if (inputTitle.checkValidity()) {
+    inputTitle.classList.remove('invalid');
+  }
+});
+
+inputRoomPrice.addEventListener('invalid', function () {
+  inputRoomPrice.classList.add('invalid');
+
+  if (inputRoomPrice.validity.valueMissing) {
+    inputRoomPrice.setCustomValidity('Это обязательное поле');
+  } else if (inputRoomPrice.validity.rangeUnderflow) {
+    inputRoomPrice.setCustomValidity('Значение должно быть больше ' + inputRoomPrice.min);
+  } else if (inputRoomPrice.validity.rangeOverflow) {
+    inputRoomPrice.setCustomValidity('Значение должно быть меньше ' + inputRoomPrice.max);
+  } else {
+    inputRoomPrice.setCustomValidity('');
+    inputRoomPrice.classList.remove('invalid');
+  }
+});
+
+inputRoomPrice.addEventListener('input', function () {
+  if (inputRoomPrice.checkValidity()) {
+    inputRoomPrice.classList.remove('invalid');
+  }
+});
+
+selectRoomType.addEventListener('change', function (evt) {
+  var selectedRoomType = evt.target.value;
+
+  switch (selectedRoomType) {
+    case 'house':
+      inputRoomPrice.setAttribute('min', '5000');
+      inputRoomPrice.setAttribute('placeholder', '5000');
+      break;
+
+    case 'palace':
+      inputRoomPrice.setAttribute('min', '10000');
+      inputRoomPrice.setAttribute('placeholder', '10000');
+      break;
+
+    case 'flat':
+      inputRoomPrice.setAttribute('min', '1000');
+      inputRoomPrice.setAttribute('placeholder', '1000');
+      break;
+
+    default:
+      inputRoomPrice.setAttribute('min', '0');
+      inputRoomPrice.setAttribute('placeholder', '0');
+      break;
+  }
+});
+
+selectTimeIn.addEventListener('change', function (evt) {
+  var selectedTimeIn = evt.target.value;
+
+  selectTimeOut.value = selectedTimeIn;
+});
+
+selectTimeOut.addEventListener('change', function (evt) {
+  var selectedTimeOut = evt.target.value;
+
+  selectTimeIn.value = selectedTimeOut;
+});
+
+var adFormHeaderUpload = adForm.querySelector('.ad-form-header__upload');
+var adFormPhotoContainer = adForm.querySelector('.ad-form__photo-container');
+
+var isValidInputFile = function (input) {
+  var validImageType = input.accept;
+  var validImageTypes = validImageType.split(', ');
+
+  var selectedIFiles = input.files;
+
+  if (selectedIFiles.length > 0) {
+
+    for (var i = 0; i < selectedIFiles.length; i++) {
+      var currentImageType = selectedIFiles[i].type;
+
+      if (!validImageTypes.includes(currentImageType)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
+var errorInputFileMessage = document.createElement('p');
+errorInputFileMessage.style.color = 'rgb(255, 0, 0)';
+errorInputFileMessage.textContent = 'Можно использовать изображения только в форматах jpg, png.';
+
+inputFileAvatar.addEventListener('change', function () {
+  if (isValidInputFile(inputFileAvatar)) {
+    adFormHeaderUpload.appendChild(errorInputFileMessage);
+  } else {
+    if (adFormHeaderUpload.contains(errorInputFileMessage)) {
+      adFormHeaderUpload.removeChild(errorInputFileMessage);
+    }
+  }
+});
+
+inputFileImages.addEventListener('change', function () {
+  if (isValidInputFile(inputFileImages)) {
+    adFormPhotoContainer.appendChild(errorInputFileMessage);
+  } else {
+    if (adFormPhotoContainer.contains(errorInputFileMessage)) {
+      adFormPhotoContainer.removeChild(errorInputFileMessage);
+    }
+  }
+});
+
+adForm.addEventListener('submit', function (evt) {
+  evt.preventDefault();
+});
 
 /**
  * @description
