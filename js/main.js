@@ -7,6 +7,7 @@ var MAP_PIN_MAIN_WIDTH = 65;
 var MAP_PIN_MAIN_HEIGHT = 65;
 var MAP_PIN_MAIN_POINTER_HEIGHT = 20;
 
+var KEY_ESCAPE = 'Escape';
 var KEY_ENTER = 'Enter';
 var KEY_LEFT_MOUSE_BUTTON = 0;
 
@@ -201,27 +202,25 @@ var createSimilarAds = function (number) {
  *
  * @return {object} - DOM-element for adding to page
  */
-var createAdCard = function (array) {
-  var currentAd = array[0];
-
+var createAdCard = function (object) {
   var cardNode = mapCard.cloneNode(true);
 
   // Create card title
   var popupTitle = cardNode.querySelector('.popup__title');
-  popupTitle.textContent = currentAd.offer.title;
+  popupTitle.textContent = object.offer.title;
 
   // Create card address
   var popupTextAddress = cardNode.querySelector('.popup__text--address');
-  popupTextAddress.textContent = currentAd.offer.address;
+  popupTextAddress.textContent = object.offer.address;
 
   // Create card price
   var popupTextPrice = cardNode.querySelector('.popup__text--price');
-  popupTextPrice.textContent = currentAd.offer.price + '₽/ночь';
+  popupTextPrice.textContent = object.offer.price + '₽/ночь';
 
   // Create card room type
   var popupType = cardNode.querySelector('.popup__type');
 
-  switch (currentAd.offer.type) {
+  switch (object.offer.type) {
     case 'bungalo':
       popupType.textContent = 'Бунгало';
       break;
@@ -240,11 +239,11 @@ var createAdCard = function (array) {
 
   // Create card capacity
   var popupTextCapacity = cardNode.querySelector('.popup__text--capacity');
-  popupTextCapacity.textContent = currentAd.offer.rooms + ' комнаты для ' + currentAd.offer.guests + ' гостей';
+  popupTextCapacity.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
 
   // Create card checkin/checkout time
   var popupTextTime = cardNode.querySelector('.popup__text--time');
-  popupTextTime.textContent = 'Заезд после ' + currentAd.offer.checkin + ' выезд до ' + currentAd.offer.checkout;
+  popupTextTime.textContent = 'Заезд после ' + object.offer.checkin + ' выезд до ' + object.offer.checkout;
 
   // Create card features
   var featuresFragment = document.createDocumentFragment();
@@ -263,14 +262,13 @@ var createAdCard = function (array) {
     popupFeatures.removeChild(currentFeatureChild);
   }
 
-  var featuresLength = currentAd.offer.features.length;
+  var featuresLength = object.offer.features.length;
 
   if (featuresLength === 0) {
     popupFeatures.style.display = 'none';
   } else {
-
     for (var j = 0; j < featuresLength; j++) {
-      var currentFeature = currentAd.offer.features[j];
+      var currentFeature = object.offer.features[j];
 
       switch (currentFeature) {
         case 'wifi':
@@ -312,9 +310,8 @@ var createAdCard = function (array) {
   popupFeatures.appendChild(featuresFragment);
 
   // Create card description
-
   var popupDescription = cardNode.querySelector('.popup__description');
-  popupDescription.textContent = currentAd.offer.description;
+  popupDescription.textContent = object.offer.description;
 
   // Create card photos
   var photoFragment = document.createDocumentFragment();
@@ -327,14 +324,14 @@ var createAdCard = function (array) {
     popupPhotos.removeChild(currentPhotoChild);
   }
 
-  var popupPhotosLength = currentAd.offer.photos.length;
+  var popupPhotosLength = object.offer.photos.length;
 
   if (popupPhotosLength === 0) {
     popupPhotos.style.display = 'none';
   } else {
     for (var k = 0; k < popupPhotosLength; k++) {
       var photo = templatePopupPhoto.cloneNode();
-      photo.setAttribute('src', currentAd.offer.photos[k]);
+      photo.setAttribute('src', object.offer.photos[k]);
 
       photoFragment.appendChild(photo);
     }
@@ -344,7 +341,7 @@ var createAdCard = function (array) {
 
   // Create card avatar
   var popupAvatar = cardNode.querySelector('.popup__avatar');
-  popupAvatar.setAttribute('src', currentAd.author.avatar);
+  popupAvatar.setAttribute('src', object.author.avatar);
 
   return cardNode;
 };
@@ -378,9 +375,100 @@ var createMapPins = function (array) {
 
 var arraySimilarAds = createSimilarAds();
 
-var adCard = createAdCard(arraySimilarAds);
+/* var addClickPinListener = function (array) {
+  mapPins.addEventListener('click', function (evt) {
+    if (evt.target &&
+        (evt.target.matches('.map__pin') || evt.target.matches('.map__pin img')) &&
+        !(evt.target.matches('.map__pin--main') || evt.target.matches('.map__pin--main img'))) {
 
-mapFilterContainer.appendChild(adCard);
+      var pinStyleLeft;
+      var pinStyleTop;
+
+      if (evt.target.tagName === 'img'.toUpperCase()) {
+        pinStyleLeft = evt.target.parentNode.style.left;
+        pinStyleTop = evt.target.parentNode.style.top;
+      } else {
+        pinStyleLeft = evt.target.style.left;
+        pinStyleTop = evt.target.style.top;
+      }
+
+      var pinLocationX = +pinStyleLeft.slice(0, pinStyleLeft.length - 2) + MAP_PIN_WIDTH / 2;
+      var pinLocationY = +pinStyleTop.slice(0, pinStyleTop.length - 2) + MAP_PIN_HEIGHT;
+
+      for (var i = 0; i < array.length; i++) {
+        var object = array[i];
+
+        if (pinLocationX === object.location.x && pinLocationY === object.location.y) {
+          var cardNode = createAdCard(object);
+
+          if (mapFilterContainer.children.length > 1) {
+            mapFilterContainer.appendChild(cardNode);
+            var previousCard = cardNode.previousSibling;
+
+            if (previousCard.matches('.map__card')) {
+              previousCard.remove();
+            }
+          } else {
+            mapFilterContainer.appendChild(cardNode);
+          }
+        }
+      }
+
+      var popupClose = cardNode.querySelector('.popup__close');
+
+      popupClose.addEventListener('click', function () {
+        cardNode.remove();
+      });
+
+      var onKeydownEscCard = function (keyEvt) {
+        if (keyEvt.key === KEY_ESCAPE) {
+          closeCard(cardNode);
+        }
+      };
+
+      var closeCard = function (currentOpenCard) {
+        currentOpenCard.remove();
+        document.removeEventListener('keydown', onKeydownEscCard);
+      };
+
+      document.addEventListener('keydown', onKeydownEscCard);
+    }
+  });
+}; */
+
+var addClickPinListener = function (pin, card) {
+  var onKeydownEscCard = function (evt) {
+    if (evt.key === KEY_ESCAPE) {
+      closeCard(card);
+    }
+  };
+
+  var closeCard = function (currentOpenCard) {
+    currentOpenCard.remove();
+    document.removeEventListener('keydown', onKeydownEscCard);
+  };
+
+  pin.addEventListener('click', function () {
+    var popupClose = card.querySelector('.popup__close');
+
+    popupClose.addEventListener('click', function () {
+      card.remove();
+    });
+
+    document.addEventListener('keydown', onKeydownEscCard);
+
+    if (mapFilterContainer.children.length > 1) {
+      mapFilterContainer.appendChild(card);
+      var previousCard = card.previousSibling;
+
+      if (previousCard.matches('.map__card')) {
+        previousCard.remove();
+      }
+    } else {
+      mapFilterContainer.appendChild(card);
+    }
+  });
+};
 
 var fragmentMapPins = createMapPins(arraySimilarAds);
 
@@ -431,9 +519,22 @@ var activateForms = function () {
 var activateMap = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
+
   mapPins.appendChild(fragmentMapPins);
+
   activateForms();
   adFormInputAddress.setAttribute('value', getCoordinateMapPinMain(true));
+
+  /* addClickPinListener(arraySimilarAds); */
+
+  var pinsOnMap = map.querySelectorAll('.map__pin');
+
+  for (var i = 0; i < pinsOnMap.length - 1; i++) {
+    var currentPin = pinsOnMap[i + 1];
+    var nodeCard = createAdCard(arraySimilarAds[i]);
+
+    addClickPinListener(currentPin, nodeCard);
+  }
 };
 
 var adFormInputAddress = adForm.querySelector('#address');
@@ -524,9 +625,14 @@ window.addEventListener('load', function () {
   onChangeRoomSelect();
 });
 
+var isMapActive = false;
+
 mapPinMain.addEventListener('mousedown', function (evt) {
-  if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
-    activateMap();
+  if (!isMapActive) {
+    if (evt.button === KEY_LEFT_MOUSE_BUTTON) {
+      activateMap();
+      isMapActive = true;
+    }
   }
 });
 
