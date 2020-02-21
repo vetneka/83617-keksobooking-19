@@ -417,67 +417,6 @@ var createMapPins = function (array) {
 
 var arraySimilarAds = createSimilarAds();
 
-/* var addClickPinListener = function (array) {
-  mapPins.addEventListener('click', function (evt) {
-    if (evt.target &&
-        (evt.target.matches('.map__pin') || evt.target.matches('.map__pin img')) &&
-        !(evt.target.matches('.map__pin--main') || evt.target.matches('.map__pin--main img'))) {
-
-      var pinStyleLeft;
-      var pinStyleTop;
-
-      if (evt.target.tagName === 'img'.toUpperCase()) {
-        pinStyleLeft = evt.target.parentNode.style.left;
-        pinStyleTop = evt.target.parentNode.style.top;
-      } else {
-        pinStyleLeft = evt.target.style.left;
-        pinStyleTop = evt.target.style.top;
-      }
-
-      var pinLocationX = +pinStyleLeft.slice(0, pinStyleLeft.length - 2) + MAP_PIN_WIDTH / 2;
-      var pinLocationY = +pinStyleTop.slice(0, pinStyleTop.length - 2) + MAP_PIN_HEIGHT;
-
-      for (var i = 0; i < array.length; i++) {
-        var object = array[i];
-
-        if (pinLocationX === object.location.x && pinLocationY === object.location.y) {
-          var cardNode = createAdCard(object);
-
-          if (mapFilterContainer.children.length > 1) {
-            mapFilterContainer.appendChild(cardNode);
-            var previousCard = cardNode.previousSibling;
-
-            if (previousCard.matches('.map__card')) {
-              previousCard.remove();
-            }
-          } else {
-            mapFilterContainer.appendChild(cardNode);
-          }
-        }
-      }
-
-      var popupClose = cardNode.querySelector('.popup__close');
-
-      popupClose.addEventListener('click', function () {
-        cardNode.remove();
-      });
-
-      var onKeydownEscCard = function (keyEvt) {
-        if (keyEvt.key === KEY_ESCAPE) {
-          closeCard(cardNode);
-        }
-      };
-
-      var closeCard = function (currentOpenCard) {
-        currentOpenCard.remove();
-        document.removeEventListener('keydown', onKeydownEscCard);
-      };
-
-      document.addEventListener('keydown', onKeydownEscCard);
-    }
-  });
-}; */
-
 var addClickPinListener = function (pin, card) {
   var onKeydownEscCard = function (evt) {
     if (evt.key === KEY_ESCAPE) {
@@ -566,8 +505,6 @@ var activateMap = function () {
 
   activateForms();
   adFormInputAddress.setAttribute('value', getCoordinateMapPinMain(true));
-
-  /* addClickPinListener(arraySimilarAds); */
 
   var pinsOnMap = map.querySelectorAll('.map__pin');
 
