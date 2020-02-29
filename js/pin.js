@@ -6,13 +6,12 @@
 
   var MAP_PIN_MAIN_WIDTH = 65;
   var MAP_PIN_MAIN_HEIGHT = 65;
-  var MAP_PIN_MAIN_POINTER_HEIGHT = 20;
+  var MAP_PIN_MAIN_POINTER_HEIGHT = 17;
 
   var pinTemplate = document.querySelector('#pin').content;
   var mapPin = pinTemplate.querySelector('.map__pin');
 
   var mapContainer = document.querySelector('.map');
-  var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
   var mapFilterContainer = mapContainer.querySelector('.map__filters-container');
 
@@ -79,40 +78,22 @@
 
   var fragmentMapPins = createMapPins(window.data.similarAds);
 
-  /**
-  * @description
-  *  Get coordinates map__pin--main in active/inactive state
-  *
-  * @param {boolean} [state=false] - state map pin: active (true), inactive (false)
-  * @return {string} - x, y coordinate
-  */
-  var getCoordinateMapPinMain = function (state) {
-    var active = state || false;
+  var mainPinSize = {
+    active: {
+      width: MAP_PIN_MAIN_WIDTH,
+      height: MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_POINTER_HEIGHT,
+    },
 
-    var currentMapPinMain = mapPinMain.getBoundingClientRect();
-
-    var currentMapPinMainX;
-    var currentMapPinMainY;
-    var result;
-
-    if (active) {
-      var currentMapPinMainHeight = MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_POINTER_HEIGHT;
-
-      currentMapPinMainX = currentMapPinMain.left + (MAP_PIN_MAIN_WIDTH / 2);
-      currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + currentMapPinMainHeight;
-    } else {
-      currentMapPinMainX = currentMapPinMain.left + (MAP_PIN_MAIN_WIDTH / 2);
-      currentMapPinMainY = (currentMapPinMain.top + window.scrollY) + (MAP_PIN_MAIN_HEIGHT / 2);
-    }
-
-    result = currentMapPinMainX + ', ' + currentMapPinMainY;
-
-    return result;
+    inactive: {
+      width: MAP_PIN_MAIN_WIDTH,
+      height: MAP_PIN_MAIN_HEIGHT,
+    },
   };
 
   window.pin = {
     fragment: fragmentMapPins,
-    coordinateMainPin: getCoordinateMapPinMain,
+    mainSize: mainPinSize,
+
     addClickLister: addClickPinListener,
   };
 })();

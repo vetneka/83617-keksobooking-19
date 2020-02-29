@@ -3,15 +3,10 @@
 var mapContainer = document.querySelector('.map');
 var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
-var adForm = document.querySelector('.ad-form');
-var adFormInputAddress = adForm.querySelector('#address');
-
 var isMapActive = false;
 
 window.addEventListener('load', function () {
   window.form.deactivate();
-
-  adFormInputAddress.setAttribute('value', window.pin.coordinateMainPin());
 
   window.form.onChangeRoomSelect();
 });
@@ -30,3 +25,5 @@ mapPinMain.addEventListener('keydown', function (evt) {
     window.map.activate();
   });
 });
+
+window.moveElement(mapPinMain);

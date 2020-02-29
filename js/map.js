@@ -5,7 +5,6 @@
   var mapPins = document.querySelector('.map__pins');
 
   var adForm = document.querySelector('.ad-form');
-  var adFormInputAddress = adForm.querySelector('#address');
 
   /**
   * @description
@@ -20,7 +19,6 @@
     mapPins.appendChild(window.pin.fragment);
 
     window.form.activate();
-    adFormInputAddress.setAttribute('value', window.pin.coordinateMainPin(true));
 
     var pinsOnMap = mapContainer.querySelectorAll('.map__pin');
 

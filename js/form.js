@@ -91,8 +91,6 @@
     });
   };
 
-  adFormInputAddress.setAttribute('value', window.pin.coordinateMainPin());
-
   var inputTitle = adForm.querySelector('#title');
 
   var selectRoomType = adForm.querySelector('#type');
@@ -236,6 +234,9 @@
   window.form = {
     activate: activateForms,
     deactivate: deactivateForms,
+
     onChangeRoomSelect: onChangeRoomSelect,
+
+    inputAddress: adFormInputAddress,
   };
 })();
