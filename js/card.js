@@ -8,47 +8,47 @@
    * @description
    *  Create advertisement card
    *
-   * @param {object} object - array of objects (advertisements) for creating card
+   * @param {advertisement} advertisement - array of advertisements (advertisements) for creating card
    *
-   * @return {object} - DOM-element for adding to page
+   * @return {advertisement} - DOM-element for adding to page
    */
-  var createAdCard = function (object) {
+  var createAdCard = function (advertisement) {
     var cardNode = mapCard.cloneNode(true);
 
     // Create card title
     var popupTitle = cardNode.querySelector('.popup__title');
 
-    if (object.offer.title === '') {
+    if (!advertisement.offer.title) {
       popupTitle.style.display = 'none';
     } else {
-      popupTitle.textContent = object.offer.title;
+      popupTitle.textContent = advertisement.offer.title;
     }
 
     // Create card address
     var popupTextAddress = cardNode.querySelector('.popup__text--address');
 
-    if (object.offer.address === '') {
+    if (!advertisement.offer.address) {
       popupTextAddress.style.display = 'none';
     } else {
-      popupTextAddress.textContent = object.offer.address;
+      popupTextAddress.textContent = advertisement.offer.address;
     }
 
     // Create card price
     var popupTextPrice = cardNode.querySelector('.popup__text--price');
 
-    if (object.offer.price === '') {
+    if (!advertisement.offer.price) {
       popupTextPrice.style.display = 'none';
     } else {
-      popupTextPrice.textContent = object.offer.price + '₽/ночь';
+      popupTextPrice.textContent = advertisement.offer.price + '₽/ночь';
     }
 
     // Create card room type
     var popupType = cardNode.querySelector('.popup__type');
 
-    if (object.offer.type === '') {
+    if (!advertisement.offer.type) {
       popupType.style.display = 'none';
     } else {
-      switch (object.offer.type) {
+      switch (advertisement.offer.type) {
         case 'bungalo':
           popupType.textContent = 'Бунгало';
           break;
@@ -69,19 +69,19 @@
     // Create card capacity
     var popupTextCapacity = cardNode.querySelector('.popup__text--capacity');
 
-    if (object.offer.rooms === '' || object.offer.guests === '') {
+    if (!advertisement.offer.rooms || !advertisement.offer.guests) {
       popupTextCapacity.style.display = 'none';
     } else {
-      popupTextCapacity.textContent = object.offer.rooms + ' комнаты для ' + object.offer.guests + ' гостей';
+      popupTextCapacity.textContent = advertisement.offer.rooms + ' комнаты для ' + advertisement.offer.guests + ' гостей';
     }
 
     // Create card checkin/checkout time
     var popupTextTime = cardNode.querySelector('.popup__text--time');
 
-    if (object.offer.checkin === '' || object.offer.checkout === '') {
+    if (!advertisement.offer.checkin || !advertisement.offer.checkout) {
       popupTextTime.style.display = 'none';
     } else {
-      popupTextTime.textContent = 'Заезд после ' + object.offer.checkin + ' выезд до ' + object.offer.checkout;
+      popupTextTime.textContent = 'Заезд после ' + advertisement.offer.checkin + ' выезд до ' + advertisement.offer.checkout;
     }
 
     // Create card features
@@ -101,14 +101,12 @@
       popupFeatures.removeChild(currentFeatureChild);
     }
 
-    var featuresLength = object.offer.features.length;
-
-    if (featuresLength === 0) {
+    if (!advertisement.offer.features) {
       popupFeatures.style.display = 'none';
     } else {
 
-      for (var j = 0; j < featuresLength; j++) {
-        var currentFeature = object.offer.features[j];
+      for (var j = 0; j < advertisement.offer.features.length; j++) {
+        var currentFeature = advertisement.offer.features[j];
 
         switch (currentFeature) {
           case 'wifi':
@@ -152,10 +150,10 @@
     // Create card description
     var popupDescription = cardNode.querySelector('.popup__description');
 
-    if (object.offer.description === '') {
+    if (!advertisement.offer.description) {
       popupDescription.style.display = 'none';
     } else {
-      popupDescription.textContent = object.offer.description;
+      popupDescription.textContent = advertisement.offer.description;
     }
 
     // Create card photos
@@ -169,14 +167,12 @@
       popupPhotos.removeChild(currentPhotoChild);
     }
 
-    var popupPhotosLength = object.offer.photos.length;
-
-    if (popupPhotosLength === 0) {
+    if (!advertisement.offer.photos) {
       popupPhotos.style.display = 'none';
     } else {
-      for (var k = 0; k < popupPhotosLength; k++) {
+      for (var k = 0; k < advertisement.offer.photos.length; k++) {
         var photo = templatePopupPhoto.cloneNode();
-        photo.setAttribute('src', object.offer.photos[k]);
+        photo.setAttribute('src', advertisement.offer.photos[k]);
 
         photoFragment.appendChild(photo);
       }
@@ -187,10 +183,10 @@
     // Create card avatar
     var popupAvatar = cardNode.querySelector('.popup__avatar');
 
-    if (object.author.avatar === '') {
+    if (!advertisement.author.avatar) {
       popupAvatar.style.display = 'none';
     } else {
-      popupAvatar.setAttribute('src', object.author.avatar);
+      popupAvatar.setAttribute('src', advertisement.author.avatar);
     }
 
     return cardNode;
