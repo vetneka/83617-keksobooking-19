@@ -3,14 +3,16 @@
 (function () {
   var mapContainer = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
+  var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
-  var adForm = document.querySelector('.ad-form');
-
+  /**
+  * @description
+  *  Activate ad map
+  *
+  * @return {void}
+  */
   var activateMap = function () {
     mapContainer.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-
-    window.form.activate();
 
     var adverts = [];
 
@@ -37,7 +39,27 @@
     window.backend.load(onLoadAdvertsSuccess, onLoadAdvertsError);
   };
 
+  /**
+  * @description
+  *  Dectivate ad map
+  *
+  * @return {void}
+  */
+  var deactivateMap = function () {
+    mapContainer.classList.add('map--faded');
+
+    window.pin.remove();
+    window.card.remove();
+
+    window.map.isActive = false;
+
+    mapPinMain.style.top = window.pin.main.position.y + 'px';
+    mapPinMain.style.left = window.pin.main.position.x + 'px';
+  };
+
   window.map = {
     activate: activateMap,
+    deactivate: deactivateMap,
+    isActive: false,
   };
 })();

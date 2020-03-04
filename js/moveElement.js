@@ -8,9 +8,9 @@
   window.moveElement = function (element) {
     var elementSize = element.getBoundingClientRect();
 
-    var elementWidth = window.pin.mainSize.inactive.width || elementSize.width;
-    var elementHeight = window.pin.mainSize.inactive.height || elementSize.height;
-    var elementHeightActive = window.pin.mainSize.active.height || 0;
+    var elementWidth = window.pin.main.size.inactive.width || elementSize.width;
+    var elementHeight = window.pin.main.size.inactive.height || elementSize.height;
+    var elementHeightActive = window.pin.main.size.active.height || 0;
 
     var elementHalfWidth = elementWidth / 2;
     var elementHalfHeight = elementHeight / 2;
