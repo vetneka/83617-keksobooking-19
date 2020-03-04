@@ -91,6 +91,8 @@
   };
 
   window.pin = {
+    create: createMapPins,
+
     fragment: fragmentMapPins,
     mainSize: mainPinSize,
 
