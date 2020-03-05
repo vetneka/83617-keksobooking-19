@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var PINS_QUANTITY = 5;
   var MAP_PIN_WIDTH = 50;
   var MAP_PIN_HEIGHT = 70;
 
@@ -58,26 +59,25 @@
   * @description
   *  Create fragment containing HTML-markup for n-th map pins
   *
-  * @param {array} array - array similar ads
-  * @param {number} quantity - quantity similar ads
+  * @param {array} data - array similar ads
   *
   * @return {object} - fragment containing map pins
   */
-  var createMapPins = function (array, quantity) {
-    var quantityPins = quantity || array.length;
+  var createMapPins = function (data) {
+    var quantityPins = data.length > PINS_QUANTITY ? PINS_QUANTITY : data.length;
 
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < quantityPins; i++) {
       var elementMapPin = mapPin.cloneNode(true);
       var elementMapPinImg = elementMapPin.querySelector('img');
-      var mapPinOffsetX = array[i].location.x - (MAP_PIN_WIDTH / 2);
-      var mapPinOffsetY = array[i].location.y - MAP_PIN_HEIGHT;
+      var mapPinOffsetX = data[i].location.x - (MAP_PIN_WIDTH / 2);
+      var mapPinOffsetY = data[i].location.y - MAP_PIN_HEIGHT;
 
       elementMapPin.style.cssText = 'left: ' + mapPinOffsetX + 'px; top: ' + mapPinOffsetY + 'px;';
 
-      elementMapPinImg.setAttribute('src', array[i].author.avatar);
-      elementMapPinImg.setAttribute('alt', array[i].offer.title);
+      elementMapPinImg.setAttribute('src', data[i].author.avatar);
+      elementMapPinImg.setAttribute('alt', data[i].offer.title);
 
       fragment.appendChild(elementMapPin);
     }

@@ -4,6 +4,11 @@
   var mapContainer = document.querySelector('.map');
   var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
+  var mapFilters = mapContainer.querySelector('.map__filters');
+  var housingType = mapFilters.querySelector('#housing-type');
+
+  var adverts = [];
+
   /**
   * @description
   *  Activate ad map
@@ -13,12 +18,12 @@
   var activateMap = function () {
     mapContainer.classList.remove('map--faded');
 
-    var adverts = [];
-
     var onLoadAdvertsSuccess = function (data) {
       adverts = data;
 
-      window.pin.render(adverts, 5);
+      window.updateAdverts(adverts);
+
+      /* window.pin.render(adverts);
 
       var pinsOnMap = mapContainer.querySelectorAll('.map__pin');
 
@@ -27,7 +32,7 @@
         var nodeCard = window.card.create(adverts[i]);
 
         window.pin.addClickLister(currentPin, nodeCard);
-      }
+      } */
     };
 
     var onLoadAdvertsError = function (message) {
@@ -54,6 +59,20 @@
     mapPinMain.style.top = window.pin.main.position.y + 'px';
     mapPinMain.style.left = window.pin.main.position.x + 'px';
   };
+
+  housingType.addEventListener('change', function () {
+    var currentValue = housingType.value;
+
+    var housingTypeFiltered = adverts.filter(function (currentElement) {
+      return currentElement.offer.type === currentValue;
+    });
+
+    if (currentValue === 'any') {
+      window.updateAdverts(adverts);
+    } else {
+      window.updateAdverts(housingTypeFiltered);
+    }
+  });
 
   window.map = {
     activate: activateMap,
