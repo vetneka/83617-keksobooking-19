@@ -2,7 +2,6 @@
 
 (function () {
   var mapContainer = document.querySelector('.map');
-  var mapPins = document.querySelector('.map__pins');
   var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
   /**
@@ -19,8 +18,7 @@
     var onLoadAdvertsSuccess = function (data) {
       adverts = data;
 
-      var advertsFragment = window.pin.create(adverts);
-      mapPins.appendChild(advertsFragment);
+      window.pin.render(adverts, 5);
 
       var pinsOnMap = mapContainer.querySelectorAll('.map__pin');
 

@@ -59,12 +59,16 @@
   *  Create fragment containing HTML-markup for n-th map pins
   *
   * @param {array} array - array similar ads
+  * @param {number} quantity - quantity similar ads
+  *
   * @return {object} - fragment containing map pins
   */
-  var createMapPins = function (array) {
+  var createMapPins = function (array, quantity) {
+    var quantityPins = quantity || array.length;
+
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < array.length; i++) {
+    for (var i = 0; i < quantityPins; i++) {
       var elementMapPin = mapPin.cloneNode(true);
       var elementMapPinImg = elementMapPin.querySelector('img');
       var mapPinOffsetX = array[i].location.x - (MAP_PIN_WIDTH / 2);
@@ -95,6 +99,12 @@
     }
   };
 
+  var renderPins = function (data, quantity) {
+    var mapPinFragement = createMapPins(data, quantity);
+
+    mapPinsContainer.append(mapPinFragement);
+  };
+
   var mainPinSize = {
     active: {
       width: MAP_PIN_MAIN_WIDTH,
@@ -115,6 +125,7 @@
   window.pin = {
     create: createMapPins,
     remove: removeMapPins,
+    render: renderPins,
 
     main: {
       size: mainPinSize,
