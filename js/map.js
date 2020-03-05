@@ -56,6 +56,8 @@
 
     window.map.isActive = false;
 
+    mapFilters.reset();
+
     mapPinMain.style.top = window.pin.main.position.y + 'px';
     mapPinMain.style.left = window.pin.main.position.x + 'px';
   };
