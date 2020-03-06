@@ -12,6 +12,13 @@
   var capacity = adForm.querySelector('#capacity');
   var capacityOptions = capacity.options;
 
+  var ValidityMessage = {
+    REQUIRED_FIELD: 'Это обязательное поле',
+    MIN_VALUE: 'Значение должно быть больше ',
+    MAX_VALUE: 'Значение должно быть меньше ',
+    INPUT_FILE_ERROR: 'Можно использовать изображения только в форматах jpg, png.',
+  };
+
   /**
   * @description
   *  Deactivate all form on page
@@ -117,7 +124,7 @@
     inputTitle.classList.add('invalid');
 
     if (inputTitle.validity.valueMissing) {
-      inputTitle.setCustomValidity('Это обязательное поле');
+      inputTitle.setCustomValidity(ValidityMessage.REQUIRED_FIELD);
     } else if (inputTitle.validity.tooShort) {
       inputTitle.setCustomValidity('Длина заголовка должна быть больше ' + MIN_INPUT_TITLE_LENGTH + ' символов, а сейчас ' + evt.target.selectionStart + '/' + MIN_INPUT_TITLE_LENGTH);
     } else {
@@ -136,11 +143,11 @@
     inputRoomPrice.classList.add('invalid');
 
     if (inputRoomPrice.validity.valueMissing) {
-      inputRoomPrice.setCustomValidity('Это обязательное поле');
+      inputRoomPrice.setCustomValidity(ValidityMessage.REQUIRED_FIELD);
     } else if (inputRoomPrice.validity.rangeUnderflow) {
-      inputRoomPrice.setCustomValidity('Значение должно быть больше ' + inputRoomPrice.min);
+      inputRoomPrice.setCustomValidity(ValidityMessage.MIN_VALUE + inputRoomPrice.min);
     } else if (inputRoomPrice.validity.rangeOverflow) {
-      inputRoomPrice.setCustomValidity('Значение должно быть меньше ' + inputRoomPrice.max);
+      inputRoomPrice.setCustomValidity(ValidityMessage.MAX_VALUE + inputRoomPrice.max);
     } else {
       inputRoomPrice.setCustomValidity('');
       inputRoomPrice.classList.remove('invalid');
@@ -216,7 +223,7 @@
 
   var errorInputFileMessage = document.createElement('p');
   errorInputFileMessage.style.color = 'rgb(255, 0, 0)';
-  errorInputFileMessage.textContent = 'Можно использовать изображения только в форматах jpg, png.';
+  errorInputFileMessage.textContent = ValidityMessage.INPUT_FILE_ERROR;
 
   inputFileAvatar.addEventListener('change', function () {
     if (isValidInputFile(inputFileAvatar)) {
@@ -239,12 +246,12 @@
   });
 
   var onSubmitSuccess = function () {
-    var successNode = window.modal.success();
+    var successNode = window.modal.createSuccessPopup();
     mainContainer.appendChild(successNode);
   };
 
   var onSubmitError = function () {
-    var errorNode = window.modal.error();
+    var errorNode = window.modal.createErrorPopup();
     mainContainer.appendChild(errorNode);
   };
 

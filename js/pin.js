@@ -94,6 +94,7 @@
       mapPinsContainerChildren[i].remove();
     }
   };
+
   var mainPinSize = {
     active: {
       width: MAP_PIN_MAIN_WIDTH,

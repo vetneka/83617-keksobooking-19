@@ -9,15 +9,37 @@
     OK: 200,
   };
 
-  var XhrMessages = {
+  var XhrMessage = {
     ERROR: 'Произошла ошибка соединения',
     FORM_ERROR: 'Ошибка отправки формы',
     TIMEOUT: 'Запрос не успел выполниться',
   };
 
+  var ResponseType = {
+    TEXT: 'text',
+    JSON: 'json',
+  };
+
+  var RequestType = {
+    GET: 'GET',
+    POST: 'POST',
+  };
+
+  var handleXhrError = function (xhr, onError) {
+    xhr.addEventListener('error', function () {
+      onError(XhrMessage.ERROR);
+    });
+
+    xhr.addEventListener('timeout', function () {
+      onError(XhrMessage.TIMEOUT + ' за ' + XHR_TIMEOUT + 'мс');
+    });
+
+    xhr.timeout = XHR_TIMEOUT;
+  };
+
   var loadData = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
-    xhr.responseType = 'json';
+    xhr.responseType = ResponseType.JSON;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
@@ -27,42 +49,27 @@
       }
     });
 
-    xhr.addEventListener('error', function () {
-      onError(XhrMessages.ERROR);
-    });
+    handleXhrError(xhr, onError);
 
-    xhr.addEventListener('timeout', function () {
-      onError(XhrMessages.TIMEOUT + ' за ' + XHR_TIMEOUT + 'мс');
-    });
-
-    xhr.timeout = XHR_TIMEOUT;
-
-    xhr.open('GET', XHR_LOAD_URL);
+    xhr.open(RequestType.GET, XHR_LOAD_URL);
     xhr.send();
   };
 
   var uploadData = function (data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
+    xhr.responseType = ResponseType.TEXT;
 
     xhr.addEventListener('load', function () {
       if (xhr.status === StatusCode.OK) {
         onSuccess();
       } else {
-        onError(XhrMessages.FORM_ERROR);
+        onError(XhrMessage.FORM_ERROR);
       }
     });
 
-    xhr.addEventListener('error', function () {
-      onError(XhrMessages.ERROR);
-    });
+    handleXhrError(xhr, onError);
 
-    xhr.addEventListener('timeout', function () {
-      onError(XhrMessages.TIMEOUT);
-    });
-
-    xhr.timeout = XHR_TIMEOUT;
-
-    xhr.open('POST', XHR_UPLOAD_URL);
+    xhr.open(RequestType.POST, XHR_UPLOAD_URL);
     xhr.send(data);
   };
 

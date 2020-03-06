@@ -65,7 +65,7 @@
   };
 
   window.modal = {
-    success: createSuccessPopup,
-    error: createErrorPopup,
+    createSuccessPopup: createSuccessPopup,
+    createErrorPopup: createErrorPopup,
   };
 })();
