@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var updateAdverts = function (adverts) {
+  var renderAdverts = function (adverts) {
     var mapContainer = document.querySelector('.map');
 
     window.pin.remove();
@@ -19,5 +19,5 @@
     }
   };
 
-  window.updateAdverts = updateAdverts;
+  window.renderAdverts = renderAdverts;
 })();
