@@ -1,6 +1,9 @@
 'use strict';
 
 (function () {
+  var mapContainer = document.querySelector('.map');
+  var mapFilterContainer = mapContainer.querySelector('.map__filters-container');
+
   var cardTemplate = document.querySelector('#card').content;
   var mapCard = cardTemplate.querySelector('.map__card');
 
@@ -192,7 +195,24 @@
     return cardNode;
   };
 
+  /**
+   * @description
+   *  Remove advertisement card
+   *
+   * @return {void}
+   */
+  var removeCard = function () {
+    for (var j = 0; j < mapFilterContainer.children.length; j++) {
+      var currentChild = mapFilterContainer.children[j];
+
+      if (currentChild.classList.contains('map__card')) {
+        currentChild.remove();
+      }
+    }
+  };
+
   window.card = {
     create: createAdCard,
+    remove: removeCard,
   };
 })();

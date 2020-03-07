@@ -13,39 +13,44 @@
 
   var mapContainer = document.querySelector('.map');
 
+  var mapPinsContainer = mapContainer.querySelector('.map__pins');
   var mapFilterContainer = mapContainer.querySelector('.map__filters-container');
 
   var addClickPinListener = function (pin, card) {
     var onKeydownEscCard = function (evt) {
       window.util.isEscEvent(evt, function () {
-        closeCard(card);
+        onCloseCard(card);
       });
     };
 
-    var closeCard = function (currentOpenCard) {
+    var onCloseCard = function (currentOpenCard) {
       currentOpenCard.remove();
       document.removeEventListener('keydown', onKeydownEscCard);
+      pin.classList.remove('map__pin--active');
     };
 
     pin.addEventListener('click', function () {
       var popupClose = card.querySelector('.popup__close');
 
       popupClose.addEventListener('click', function () {
-        card.remove();
+        onCloseCard(card);
       });
 
       document.addEventListener('keydown', onKeydownEscCard);
 
-      if (mapFilterContainer.children.length > 1) {
-        mapFilterContainer.appendChild(card);
-        var previousCard = card.previousSibling;
+      window.card.remove();
 
-        if (previousCard.matches('.map__card')) {
-          previousCard.remove();
+      mapFilterContainer.appendChild(card);
+
+      for (var i = 0; i < mapPinsContainer.children.length; i++) {
+        var currentChild = mapPinsContainer.children[i];
+
+        if (currentChild.classList.contains('map__pin--active')) {
+          currentChild.classList.remove('map__pin--active');
         }
-      } else {
-        mapFilterContainer.appendChild(card);
       }
+
+      pin.classList.add('map__pin--active');
     });
   };
 
@@ -76,7 +81,19 @@
     return fragment;
   };
 
-  var fragmentMapPins = createMapPins(window.data.similarAds);
+  /**
+  * @description
+  *  Remove map pins
+  *
+  * @return {void}
+  */
+  var removeMapPins = function () {
+    var mapPinsContainerChildren = mapPinsContainer.children;
+
+    for (var i = mapPinsContainerChildren.length - 1; i > 1; i--) {
+      mapPinsContainerChildren[i].remove();
+    }
+  };
 
   var mainPinSize = {
     active: {
@@ -90,9 +107,19 @@
     },
   };
 
+  var mainPinPosition = {
+    x: 0,
+    y: 0,
+  };
+
   window.pin = {
-    fragment: fragmentMapPins,
-    mainSize: mainPinSize,
+    create: createMapPins,
+    remove: removeMapPins,
+
+    main: {
+      size: mainPinSize,
+      position: mainPinPosition,
+    },
 
     addClickLister: addClickPinListener,
   };

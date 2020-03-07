@@ -3,12 +3,21 @@
 (function () {
   var MIN_INPUT_TITLE_LENGTH = 30;
 
+  var mainContainer = document.querySelector('main');
+
   var adForm = document.querySelector('.ad-form');
   var adFormInputAddress = adForm.querySelector('#address');
 
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var capacityOptions = capacity.options;
+
+  var ValidityMessage = {
+    REQUIRED_FIELD: 'Это обязательное поле',
+    MIN_VALUE: 'Значение должно быть больше ',
+    MAX_VALUE: 'Значение должно быть меньше ',
+    INPUT_FILE_ERROR: 'Можно использовать изображения только в форматах jpg, png.',
+  };
 
   /**
   * @description
@@ -27,6 +36,13 @@
         currentFormChildren.setAttribute('disabled', '');
       }
     }
+
+    adForm.classList.add('ad-form--disabled');
+    adForm.reset();
+
+    window.form.inputAddress.value =
+      Math.ceil(window.pin.main.position.x + (window.pin.main.size.inactive.width / 2)) + ', ' +
+      Math.ceil(window.pin.main.position.y + (window.pin.main.size.inactive.height / 2));
   };
 
   /**
@@ -46,6 +62,8 @@
         currentFormChildren.removeAttribute('disabled', '');
       }
     }
+
+    adForm.classList.remove('ad-form--disabled');
   };
 
   /**
@@ -106,7 +124,7 @@
     inputTitle.classList.add('invalid');
 
     if (inputTitle.validity.valueMissing) {
-      inputTitle.setCustomValidity('Это обязательное поле');
+      inputTitle.setCustomValidity(ValidityMessage.REQUIRED_FIELD);
     } else if (inputTitle.validity.tooShort) {
       inputTitle.setCustomValidity('Длина заголовка должна быть больше ' + MIN_INPUT_TITLE_LENGTH + ' символов, а сейчас ' + evt.target.selectionStart + '/' + MIN_INPUT_TITLE_LENGTH);
     } else {
@@ -125,11 +143,11 @@
     inputRoomPrice.classList.add('invalid');
 
     if (inputRoomPrice.validity.valueMissing) {
-      inputRoomPrice.setCustomValidity('Это обязательное поле');
+      inputRoomPrice.setCustomValidity(ValidityMessage.REQUIRED_FIELD);
     } else if (inputRoomPrice.validity.rangeUnderflow) {
-      inputRoomPrice.setCustomValidity('Значение должно быть больше ' + inputRoomPrice.min);
+      inputRoomPrice.setCustomValidity(ValidityMessage.MIN_VALUE + inputRoomPrice.min);
     } else if (inputRoomPrice.validity.rangeOverflow) {
-      inputRoomPrice.setCustomValidity('Значение должно быть меньше ' + inputRoomPrice.max);
+      inputRoomPrice.setCustomValidity(ValidityMessage.MAX_VALUE + inputRoomPrice.max);
     } else {
       inputRoomPrice.setCustomValidity('');
       inputRoomPrice.classList.remove('invalid');
@@ -205,7 +223,7 @@
 
   var errorInputFileMessage = document.createElement('p');
   errorInputFileMessage.style.color = 'rgb(255, 0, 0)';
-  errorInputFileMessage.textContent = 'Можно использовать изображения только в форматах jpg, png.';
+  errorInputFileMessage.textContent = ValidityMessage.INPUT_FILE_ERROR;
 
   inputFileAvatar.addEventListener('change', function () {
     if (isValidInputFile(inputFileAvatar)) {
@@ -227,8 +245,24 @@
     }
   });
 
+  var onSubmitSuccess = function () {
+    var successNode = window.modal.createSuccessPopup();
+    mainContainer.appendChild(successNode);
+  };
+
+  var onSubmitError = function () {
+    var errorNode = window.modal.createErrorPopup();
+    mainContainer.appendChild(errorNode);
+  };
+
   adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
+
+    var formData = new FormData(adForm);
+    window.backend.upload(formData, onSubmitSuccess, onSubmitError);
+
+    window.form.deactivate();
+    window.map.deactivate();
   });
 
   window.form = {
