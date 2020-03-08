@@ -122,14 +122,16 @@
   var resultFilteredArray = [];
 
   var onChangeMapFilters = function () {
-    resultFilteredArray = adverts.
+    window.debounce(function () {
+      resultFilteredArray = adverts.
       filter(onChangeHousingType).
       filter(onChangeHousingPrice).
       filter(onChangeHousingRooms).
       filter(onChangeHousingGuests).
       filter(onChangeHousingFeatures);
 
-    window.renderAdverts(resultFilteredArray);
+      window.renderAdverts(resultFilteredArray);
+    });
   };
 
   mapFilters.addEventListener('change', onChangeMapFilters);
