@@ -8,6 +8,8 @@
   var adForm = document.querySelector('.ad-form');
   var adFormInputAddress = adForm.querySelector('#address');
 
+  var adFormReset = adForm.querySelector('.ad-form__reset');
+
   var roomNumber = adForm.querySelector('#room_number');
   var capacity = adForm.querySelector('#capacity');
   var capacityOptions = capacity.options;
@@ -261,6 +263,11 @@
     var formData = new FormData(adForm);
     window.backend.upload(formData, onSubmitSuccess, onSubmitError);
 
+    window.form.deactivate();
+    window.map.deactivate();
+  });
+
+  adFormReset.addEventListener('click', function () {
     window.form.deactivate();
     window.map.deactivate();
   });
