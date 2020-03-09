@@ -119,9 +119,6 @@
   var selectTimeIn = adForm.querySelector('#timein');
   var selectTimeOut = adForm.querySelector('#timeout');
 
-  var inputFileAvatar = adForm.querySelector('#avatar');
-  var inputFileImages = adForm.querySelector('#images');
-
   inputTitle.addEventListener('invalid', function (evt) {
     inputTitle.classList.add('invalid');
 
@@ -200,53 +197,6 @@
     selectTimeIn.value = selectedTimeOut;
   });
 
-  var adFormHeaderUpload = adForm.querySelector('.ad-form-header__upload');
-  var adFormPhotoContainer = adForm.querySelector('.ad-form__photo-container');
-
-  var isValidInputFile = function (input) {
-    var validImageType = input.accept;
-    var validImageTypes = validImageType.split(', ');
-
-    var selectedIFiles = input.files;
-
-    if (selectedIFiles.length > 0) {
-
-      for (var i = 0; i < selectedIFiles.length; i++) {
-        var currentImageType = selectedIFiles[i].type;
-
-        if (!validImageTypes.includes(currentImageType)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  };
-
-  var errorInputFileMessage = document.createElement('p');
-  errorInputFileMessage.style.color = 'rgb(255, 0, 0)';
-  errorInputFileMessage.textContent = ValidityMessage.INPUT_FILE_ERROR;
-
-  inputFileAvatar.addEventListener('change', function () {
-    if (isValidInputFile(inputFileAvatar)) {
-      adFormHeaderUpload.appendChild(errorInputFileMessage);
-    } else {
-      if (adFormHeaderUpload.contains(errorInputFileMessage)) {
-        adFormHeaderUpload.removeChild(errorInputFileMessage);
-      }
-    }
-  });
-
-  inputFileImages.addEventListener('change', function () {
-    if (isValidInputFile(inputFileImages)) {
-      adFormPhotoContainer.appendChild(errorInputFileMessage);
-    } else {
-      if (adFormPhotoContainer.contains(errorInputFileMessage)) {
-        adFormPhotoContainer.removeChild(errorInputFileMessage);
-      }
-    }
-  });
-
   var onSubmitSuccess = function () {
     var successNode = window.modal.createSuccessPopup();
     mainContainer.appendChild(successNode);
@@ -279,5 +229,7 @@
     onChangeRoomSelect: onChangeRoomSelect,
 
     inputAddress: adFormInputAddress,
+
+    validityMessage: ValidityMessage,
   };
 })();
