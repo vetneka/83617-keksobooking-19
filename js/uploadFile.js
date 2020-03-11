@@ -24,11 +24,7 @@
       return fileName.endsWith(currentType);
     });
 
-    if (matches) {
-      return true;
-    }
-
-    return false;
+    return matches;
   };
 
   var onUploadAvatar = function () {
