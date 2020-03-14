@@ -13,10 +13,6 @@
 
   var adFormPhotoTemplate = document.querySelector('.ad-form__photo');
 
-  var errorInputFileMessage = document.createElement('p');
-  errorInputFileMessage.style.color = 'rgb(255, 0, 0)';
-  errorInputFileMessage.textContent = window.form.validityMessage.INPUT_FILE_ERROR;
-
   var isValidFileType = function (file) {
     var fileName = file.name.toLowerCase();
 
@@ -31,6 +27,7 @@
     var file = avatar.files[0];
 
     if (!isValidFileType(file)) {
+      var errorInputFileMessage = window.modal.createErrorPopup(window.form.validityMessage.INPUT_FILE_ERROR);
       adFormHeaderUpload.append(errorInputFileMessage);
     } else {
       if (adFormHeaderUpload.contains(errorInputFileMessage)) {
@@ -55,12 +52,9 @@
         var file = fileList[i];
 
         if (!isValidFileType(file)) {
+          var errorInputFileMessage = window.modal.createErrorPopup(window.form.validityMessage.INPUT_FILE_ERROR);
           adFormPhotoContainer.append(errorInputFileMessage);
         } else {
-          if (adFormPhotoContainer.contains(errorInputFileMessage)) {
-            adFormPhotoContainer.removeChild(errorInputFileMessage);
-          }
-
           for (var j = adFormPhotoContainer.children.length - 1; j >= 0; j--) {
             var currentChild = adFormPhotoContainer.children[j];
 

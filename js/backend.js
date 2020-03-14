@@ -25,6 +25,15 @@
     POST: 'POST',
   };
 
+  /**
+   * @description
+   *  Xhr error handler
+   *
+   * @param {object} xhr - current XMLHttpRequest
+   * @param {function} onError - callback
+   *
+   * @return {void}
+   */
   var handleXhrError = function (xhr, onError) {
     xhr.addEventListener('error', function () {
       onError(XhrMessage.ERROR);
@@ -37,6 +46,15 @@
     xhr.timeout = XHR_TIMEOUT;
   };
 
+  /**
+   * @description
+   *  Create XMLHttpRequest for download data from server
+   *
+   * @param {function} onSuccess - callback for success request
+   * @param {function} onError - callback for error request
+   *
+   * @return {void}
+   */
   var loadData = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = ResponseType.JSON;
@@ -55,6 +73,16 @@
     xhr.send();
   };
 
+  /**
+   * @description
+   *  Create XMLHttpRequest for upload form data on a server
+   *
+   * @param {object} data - data for upload
+   * @param {function} onSuccess - callback for success request
+   * @param {function} onError - callback for error request
+   *
+   * @return {void}
+   */
   var uploadData = function (data, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = ResponseType.TEXT;

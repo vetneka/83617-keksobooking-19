@@ -121,20 +121,20 @@
 
   var resultFilteredArray = [];
 
-  var onChangeMapFilters = function () {
-    window.debounce(function () {
-      resultFilteredArray = adverts.
-      filter(onChangeHousingType).
-      filter(onChangeHousingPrice).
-      filter(onChangeHousingRooms).
-      filter(onChangeHousingGuests).
-      filter(onChangeHousingFeatures);
+  var onChangeMapFilters = window.debounce(function () {
+    resultFilteredArray = adverts.
+    filter(onChangeHousingType).
+    filter(onChangeHousingPrice).
+    filter(onChangeHousingRooms).
+    filter(onChangeHousingGuests).
+    filter(onChangeHousingFeatures);
 
-      window.renderAdverts(resultFilteredArray);
-    });
-  };
+    window.renderAdverts(resultFilteredArray);
+  });
 
   mapFilters.addEventListener('change', onChangeMapFilters);
+
+  window.moveElement(mapPinMain);
 
   window.map = {
     activate: activateMap,

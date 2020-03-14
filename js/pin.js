@@ -13,9 +13,35 @@
   var mapPin = pinTemplate.querySelector('.map__pin');
 
   var mapContainer = document.querySelector('.map');
+  var mapPinMain = mapContainer.querySelector('.map__pin--main');
 
   var mapPinsContainer = mapContainer.querySelector('.map__pins');
   var mapFilterContainer = mapContainer.querySelector('.map__filters-container');
+
+  var mainPinPosition = {
+    x: mapPinMain.offsetLeft,
+    y: mapPinMain.offsetTop,
+  };
+
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    if (!window.map.isActive) {
+      window.util.isMouseLeftButtonEvent(evt, function () {
+        window.map.activate();
+        window.form.activate();
+        window.map.isActive = true;
+      });
+    }
+  });
+
+  mapPinMain.addEventListener('keydown', function (evt) {
+    if (!window.map.isActive) {
+      window.util.isEnterEvent(evt, function () {
+        window.map.activate();
+        window.form.activate();
+        window.map.isActive = true;
+      });
+    }
+  });
 
   var addClickPinListener = function (pin, card) {
     var onKeydownEscCard = function (evt) {
@@ -36,6 +62,10 @@
       popupClose.addEventListener('click', function () {
         onCloseCard(card);
       });
+
+      console.log(popupClose)
+      popupClose.focus();
+
 
       document.addEventListener('keydown', onKeydownEscCard);
 
@@ -115,11 +145,6 @@
       width: MAP_PIN_MAIN_WIDTH,
       height: MAP_PIN_MAIN_HEIGHT,
     },
-  };
-
-  var mainPinPosition = {
-    x: 0,
-    y: 0,
   };
 
   window.pin = {
