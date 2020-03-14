@@ -63,10 +63,6 @@
         onCloseCard(card);
       });
 
-      console.log(popupClose)
-      popupClose.focus();
-
-
       document.addEventListener('keydown', onKeydownEscCard);
 
       window.card.remove();
