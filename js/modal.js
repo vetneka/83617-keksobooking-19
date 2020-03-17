@@ -30,10 +30,15 @@
     return successPopup;
   };
 
-  var createErrorPopup = function () {
+  var createErrorPopup = function (message) {
+    var customErrorMessage = message || null;
     var errorPopup = errorMessageTemplate.cloneNode(true);
     var errorMessage = errorPopup.querySelector('.error__message');
     var errorButton = errorPopup.querySelector('.error__button');
+
+    if (customErrorMessage) {
+      errorMessage.textContent = customErrorMessage;
+    }
 
     var onKeyDownEsc = function (evt) {
       window.util.isEscEvent(evt, function () {

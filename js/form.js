@@ -66,7 +66,11 @@
     }
 
     adForm.classList.remove('ad-form--disabled');
+
+    onChangeRoomSelect();
   };
+
+  window.addEventListener('load', deactivateForms);
 
   /**
   * @description
@@ -225,8 +229,6 @@
   window.form = {
     activate: activateForms,
     deactivate: deactivateForms,
-
-    onChangeRoomSelect: onChangeRoomSelect,
 
     inputAddress: adFormInputAddress,
 

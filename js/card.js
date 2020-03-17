@@ -11,9 +11,9 @@
    * @description
    *  Create advertisement card
    *
-   * @param {advertisement} advertisement - array of advertisements (advertisements) for creating card
+   * @param {object} advertisement - object for creating card
    *
-   * @return {advertisement} - DOM-element for adding to page
+   * @return {object} - DOM-element for adding to page
    */
   var createAdCard = function (advertisement) {
     var cardNode = mapCard.cloneNode(true);
