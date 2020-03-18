@@ -22,6 +22,7 @@
   */
   var activateMap = function () {
     mapContainer.classList.remove('map--faded');
+    mapFilters.style.visibility = 'visible';
 
     var onLoadAdvertsSuccess = function (data) {
       adverts = data;
@@ -30,6 +31,8 @@
     };
 
     var onLoadAdvertsError = function (message) {
+      resetMapFilters();
+
       throw Error(message);
     };
 
@@ -50,10 +53,15 @@
 
     window.map.isActive = false;
 
-    mapFilters.reset();
+    resetMapFilters();
 
     mapPinMain.style.top = window.pin.main.position.y + 'px';
     mapPinMain.style.left = window.pin.main.position.x + 'px';
+  };
+
+  var resetMapFilters = function () {
+    mapFilters.reset();
+    mapFilters.style.visibility = 'hidden';
   };
 
   var onChangeHousingType = function (currentElement) {

@@ -39,8 +39,7 @@
       }
     }
 
-    adForm.classList.add('ad-form--disabled');
-    adForm.reset();
+    resetAdForm();
 
     window.form.inputAddress.value =
       Math.ceil(window.pin.main.position.x + (window.pin.main.size.inactive.width / 2)) + ', ' +
@@ -69,8 +68,6 @@
 
     onChangeRoomSelect();
   };
-
-  window.addEventListener('load', deactivateForms);
 
   /**
   * @description
@@ -119,6 +116,7 @@
 
   var selectRoomType = adForm.querySelector('#type');
   var inputRoomPrice = adForm.querySelector('#price');
+  var inputRoomPriceInitialValue = inputRoomPrice.getAttribute('placeholder');
 
   var selectTimeIn = adForm.querySelector('#timein');
   var selectTimeOut = adForm.querySelector('#timeout');
@@ -201,9 +199,23 @@
     selectTimeIn.value = selectedTimeOut;
   });
 
+  var resetAdForm = function () {
+    adForm.classList.add('ad-form--disabled');
+    adForm.reset();
+
+    inputTitle.classList.remove('invalid');
+    inputRoomPrice.classList.remove('invalid');
+    inputRoomPrice.setAttribute('placeholder', inputRoomPriceInitialValue);
+
+    window.uploadFile.reset();
+  };
+
   var onSubmitSuccess = function () {
     var successNode = window.modal.createPopup('success');
     mainContainer.appendChild(successNode);
+
+    window.form.deactivate();
+    window.map.deactivate();
   };
 
   var onSubmitError = function () {
@@ -216,15 +228,14 @@
 
     var formData = new FormData(adForm);
     window.backend.uploadData(onSubmitSuccess, onSubmitError, formData);
-
-    window.form.deactivate();
-    window.map.deactivate();
   });
 
   adFormReset.addEventListener('click', function () {
     window.form.deactivate();
     window.map.deactivate();
   });
+
+  window.addEventListener('load', deactivateForms);
 
   window.form = {
     activate: activateForms,

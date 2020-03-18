@@ -42,6 +42,9 @@
           y: moveEvt.clientY,
         };
 
+        element.style.top = (element.offsetTop - shift.y) + 'px';
+        element.style.left = (element.offsetLeft - shift.x) + 'px';
+
         if (element.offsetLeft < -elementHalfWidth) {
           element.style.left = (-elementHalfWidth) + 'px';
         }
@@ -50,24 +53,21 @@
           element.style.left = (MOVE_AREA_WIDTH - elementHalfWidth) + 'px';
         }
 
-        if (element.offsetTop < MOVE_AREA_TOP) {
-          element.style.top = MOVE_AREA_TOP + 'px';
+        if (element.offsetTop < MOVE_AREA_TOP - elementHeightActive) {
+          element.style.top = (MOVE_AREA_TOP - elementHeightActive) + 'px';
         }
 
-        if (element.offsetTop > MOVE_AREA_BOTTOM - elementHeight) {
-          element.style.top = (MOVE_AREA_BOTTOM - elementHeight) + 'px';
+        if (element.offsetTop > MOVE_AREA_BOTTOM - elementHeightActive) {
+          element.style.top = (MOVE_AREA_BOTTOM - elementHeightActive) + 'px';
         }
-
-        element.style.top = (element.offsetTop - shift.y) + 'px';
-        element.style.left = (element.offsetLeft - shift.x) + 'px';
       };
 
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
 
         elementCurrentPosition =
-          (Math.ceil(element.offsetLeft + elementHalfWidth)) + ', ' +
-          (Math.ceil(element.offsetTop + elementHeightActive));
+          (Math.floor(element.offsetLeft + elementHalfWidth)) + ', ' +
+          (Math.floor(element.offsetTop + elementHeightActive));
 
         window.form.inputAddress.value = elementCurrentPosition;
 

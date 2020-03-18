@@ -16,7 +16,7 @@
 
   var XhrUrl = {
     LOAD: 'https://js.dump.academy/keksobooking/data',
-    UPLOAD: 'https://js.dump.academy/keksobookin/',
+    UPLOAD: 'https://js.dump.academy/keksobooking/',
   };
 
   var RequestType = {
