@@ -1,8 +1,6 @@
 'use strict';
 
 (function () {
-  var XHR_LOAD_URL = 'https://js.dump.academy/keksobooking/data';
-  var XHR_UPLOAD_URL = 'https://js.dump.academy/keksobooking/';
   var XHR_TIMEOUT = 10000;
 
   var StatusCode = {
@@ -13,11 +11,12 @@
     ERROR: 'Произошла ошибка соединения',
     FORM_ERROR: 'Ошибка отправки формы',
     TIMEOUT: 'Запрос не успел выполниться',
+    STATUS: 'Статус ответа ',
   };
 
-  var ResponseType = {
-    TEXT: 'text',
-    JSON: 'json',
+  var XhrUrl = {
+    LOAD: 'https://js.dump.academy/keksobooking/data',
+    UPLOAD: 'https://js.dump.academy/keksobookin/',
   };
 
   var RequestType = {
@@ -25,16 +24,38 @@
     POST: 'POST',
   };
 
+  var ResponseType = {
+    TEXT: 'text',
+    JSON: 'json',
+  };
+
   /**
    * @description
-   *  Xhr error handler
+   *  Create XMLHttpRequest
    *
-   * @param {object} xhr - current XMLHttpRequest
-   * @param {function} onError - callback
+   * @param {string} url - url for request
+   * @param {string} method - request method
+   * @param {string} responseType - response type
+   * @param {function} onSuccess - callback for success request
+   * @param {function} onError - callback for error request
+   * @param {object} data - data for upload on server
    *
    * @return {void}
    */
-  var handleXhrError = function (xhr, onError) {
+  var sendRequest = function (url, method, responseType, onSuccess, onError, data) {
+    var xhr = new XMLHttpRequest();
+    data = data || null;
+
+    xhr.responseType = responseType;
+
+    xhr.addEventListener('load', function () {
+      if (xhr.status === StatusCode.OK) {
+        onSuccess(xhr.response);
+      } else {
+        onError(XhrMessage.STATUS + xhr.status);
+      }
+    });
+
     xhr.addEventListener('error', function () {
       onError(XhrMessage.ERROR);
     });
@@ -44,65 +65,19 @@
     });
 
     xhr.timeout = XHR_TIMEOUT;
-  };
 
-  /**
-   * @description
-   *  Create XMLHttpRequest for download data from server
-   *
-   * @param {function} onSuccess - callback for success request
-   * @param {function} onError - callback for error request
-   *
-   * @return {void}
-   */
-  var loadData = function (onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = ResponseType.JSON;
+    xhr.open(method, url);
 
-    xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
-        onSuccess(xhr.response);
-      } else {
-        onError('Статус ответа: ' + xhr.status);
-      }
-    });
-
-    handleXhrError(xhr, onError);
-
-    xhr.open(RequestType.GET, XHR_LOAD_URL);
-    xhr.send();
-  };
-
-  /**
-   * @description
-   *  Create XMLHttpRequest for upload form data on a server
-   *
-   * @param {object} data - data for upload
-   * @param {function} onSuccess - callback for success request
-   * @param {function} onError - callback for error request
-   *
-   * @return {void}
-   */
-  var uploadData = function (data, onSuccess, onError) {
-    var xhr = new XMLHttpRequest();
-    xhr.responseType = ResponseType.TEXT;
-
-    xhr.addEventListener('load', function () {
-      if (xhr.status === StatusCode.OK) {
-        onSuccess();
-      } else {
-        onError(XhrMessage.FORM_ERROR);
-      }
-    });
-
-    handleXhrError(xhr, onError);
-
-    xhr.open(RequestType.POST, XHR_UPLOAD_URL);
     xhr.send(data);
   };
 
   window.backend = {
-    load: loadData,
-    upload: uploadData,
+    loadData: function (onSuccess, onError) {
+      sendRequest(XhrUrl.LOAD, RequestType.GET, ResponseType.JSON, onSuccess, onError);
+    },
+
+    uploadData: function (onSuccess, onError, data) {
+      sendRequest(XhrUrl.UPLOAD, RequestType.POST, ResponseType.TEXT, onSuccess, onError, data);
+    },
   };
 })();

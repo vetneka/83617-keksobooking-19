@@ -33,7 +33,7 @@
       throw Error(message);
     };
 
-    window.backend.load(onLoadAdvertsSuccess, onLoadAdvertsError);
+    window.backend.loadData(onLoadAdvertsSuccess, onLoadAdvertsError);
   };
 
   /**

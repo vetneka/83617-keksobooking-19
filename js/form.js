@@ -215,7 +215,7 @@
     evt.preventDefault();
 
     var formData = new FormData(adForm);
-    window.backend.upload(formData, onSubmitSuccess, onSubmitError);
+    window.backend.uploadData(onSubmitSuccess, onSubmitError, formData);
 
     window.form.deactivate();
     window.map.deactivate();
