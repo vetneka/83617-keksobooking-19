@@ -81,7 +81,7 @@
   var onChangeRoomSelect = function () {
     for (var i = 0; i < capacityOptions.length; i++) {
       var currentCapatityOption = capacityOptions[i];
-      if (currentCapatityOption.selected === false) {
+      if (!currentCapatityOption.selected) {
         currentCapatityOption.setAttribute('disabled', '');
       }
     }
@@ -108,7 +108,7 @@
           currentCapacityOption.setAttribute('disabled', '');
         }
 
-        if (currentCapacityOption.disabled === false) {
+        if (!currentCapacityOption.disabled) {
           capacity.value = currentCapacityOption.value;
         }
       }
