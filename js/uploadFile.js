@@ -27,7 +27,7 @@
     var file = avatar.files[0];
 
     if (!isValidFileType(file)) {
-      var errorInputFileMessage = window.modal.createErrorPopup(window.form.validityMessage.INPUT_FILE_ERROR);
+      var errorInputFileMessage = window.modal.createPopup('error', window.form.validityMessage.INPUT_FILE_ERROR);
       adFormHeaderUpload.append(errorInputFileMessage);
     } else {
       if (adFormHeaderUpload.contains(errorInputFileMessage)) {

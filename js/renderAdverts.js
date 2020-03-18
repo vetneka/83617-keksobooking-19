@@ -15,7 +15,7 @@
       var currentPin = pinsOnMap[i + 1];
       var nodeCard = window.card.create(adverts[i]);
 
-      window.pin.addClickLister(currentPin, nodeCard);
+      window.pin.addClickListener(currentPin, nodeCard);
     }
   };
 

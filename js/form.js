@@ -202,12 +202,12 @@
   });
 
   var onSubmitSuccess = function () {
-    var successNode = window.modal.createSuccessPopup();
+    var successNode = window.modal.createPopup('success');
     mainContainer.appendChild(successNode);
   };
 
   var onSubmitError = function () {
-    var errorNode = window.modal.createErrorPopup();
+    var errorNode = window.modal.createPopup('error');
     mainContainer.appendChild(errorNode);
   };
 

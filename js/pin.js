@@ -44,26 +44,29 @@
   });
 
   var addClickPinListener = function (pin, card) {
+    var popupCloseButton = card.querySelector('.popup__close');
+
     var onKeydownEscCard = function (evt) {
       window.util.isEscEvent(evt, function () {
-        onCloseCard(card);
+        closeCard();
       });
     };
 
-    var onCloseCard = function (currentOpenCard) {
-      currentOpenCard.remove();
-      document.removeEventListener('keydown', onKeydownEscCard);
+    var onClickPopupCloseButton = function () {
+      closeCard();
+    };
+
+    var closeCard = function () {
+      card.remove();
       pin.classList.remove('map__pin--active');
+
+      window.removeEventListener('keydown', onKeydownEscCard);
+      popupCloseButton.removeEventListener('click', onClickPopupCloseButton);
     };
 
     pin.addEventListener('click', function () {
-      var popupClose = card.querySelector('.popup__close');
-
-      popupClose.addEventListener('click', function () {
-        onCloseCard(card);
-      });
-
-      document.addEventListener('keydown', onKeydownEscCard);
+      popupCloseButton.addEventListener('click', onClickPopupCloseButton);
+      window.addEventListener('keydown', onKeydownEscCard);
 
       window.card.remove();
 
@@ -126,9 +129,9 @@
   };
 
   var renderPins = function (data, quantity) {
-    var mapPinFragement = createMapPins(data, quantity);
+    var mapPinFragment = createMapPins(data, quantity);
 
-    mapPinsContainer.append(mapPinFragement);
+    mapPinsContainer.append(mapPinFragment);
   };
 
   var mainPinSize = {
@@ -153,6 +156,6 @@
       position: mainPinPosition,
     },
 
-    addClickLister: addClickPinListener,
+    addClickListener: addClickPinListener,
   };
 })();
