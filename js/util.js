@@ -9,20 +9,24 @@
    * @description
    *  Getting random number in range from begin to end
    *
-   * @param {number} [begin=0] - min number in selected range
-   * @param {number} [end=10] - max number in selected range
+   * @param {number} [rangeStart=0] - min number in selected range
+   * @param {number} [rangeEnd=10] - max number in selected range
    *
    * @return {number} random number
    */
-  var getRandomNumber = function (begin, end) {
-    var startNumber = begin || 0;
-    var endNumber = end || 10;
+  var getRandomNumber = function (rangeStart, rangeEnd) {
+    var RANGE_START = 0;
+    var RANGE_END = 10;
+    var MULTIPLIER = 10;
+
+    rangeStart = rangeStart || RANGE_START;
+    rangeEnd = rangeEnd || RANGE_END;
 
     var result;
     var counter = 1;
-    var digit = 10;
+    var digit = MULTIPLIER;
 
-    for (var i = 10; i <= endNumber; i *= 10) {
+    for (var i = MULTIPLIER; i <= rangeEnd; i *= MULTIPLIER) {
       counter++;
     }
 
@@ -30,7 +34,7 @@
 
     do {
       result = Math.round(Math.random() * digit);
-    } while (result < startNumber || result > endNumber);
+    } while (result < rangeStart || result > rangeEnd);
 
     return result;
   };
