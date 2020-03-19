@@ -27,7 +27,7 @@
     var onLoadAdvertsSuccess = function (data) {
       adverts = data;
 
-      window.renderAdverts(adverts);
+      window.pin.render(adverts);
     };
 
     var onLoadAdvertsError = function (message) {
@@ -137,7 +137,7 @@
     filter(onChangeHousingGuests).
     filter(onChangeHousingFeatures);
 
-    window.renderAdverts(resultFilteredArray);
+    window.pin.render(resultFilteredArray);
   });
 
   mapFilters.addEventListener('change', onChangeMapFilters);

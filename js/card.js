@@ -191,6 +191,16 @@
     }
   };
 
+  var onKeydownCard = function (evt) {
+    window.util.isEscEvent(evt, function () {
+      removeCard();
+    });
+  };
+
+  var onClickCardCloseButton = function () {
+    removeCard();
+  };
+
   /**
    * @description
    *  Create advertisement card
@@ -201,6 +211,10 @@
    */
   var createAdCard = function (advertisement) {
     var cardNode = mapCard.cloneNode(true);
+    var cardCloseButton = cardNode.querySelector('.popup__close');
+
+    cardCloseButton.addEventListener('click', onClickCardCloseButton);
+    window.addEventListener('keydown', onKeydownCard);
 
     createCardTitle(cardNode, advertisement);
     createCardAddress(cardNode, advertisement);
@@ -223,17 +237,23 @@
    * @return {void}
    */
   var removeCard = function () {
-    for (var j = 0; j < mapFilterContainer.children.length; j++) {
-      var currentChild = mapFilterContainer.children[j];
+    window.removeEventListener('keydown', onKeydownCard);
+    window.pin.removeActiveClass();
 
-      if (currentChild.classList.contains('map__card')) {
-        currentChild.remove();
-      }
+    var card = mapFilterContainer.querySelector('.map__card');
+    if (card) {
+      card.remove();
     }
+  };
+
+  var renderAdCard = function (data) {
+    var adCardNode = createAdCard(data);
+    mapFilterContainer.appendChild(adCardNode);
   };
 
   window.card = {
     create: createAdCard,
     remove: removeCard,
+    render: renderAdCard,
   };
 })();
