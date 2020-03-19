@@ -116,6 +116,8 @@
   var renderPins = function (data) {
     var mapPinFragment = createMapPins(data);
 
+    window.pin.remove();
+    window.card.remove();
     mapPinsContainer.append(mapPinFragment);
   };
 
