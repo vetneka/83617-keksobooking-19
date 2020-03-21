@@ -130,12 +130,13 @@
   var resultFilteredArray = [];
 
   var onChangeMapFilters = window.debounce(function () {
-    resultFilteredArray = adverts.
-    filter(onChangeHousingType).
-    filter(onChangeHousingPrice).
-    filter(onChangeHousingRooms).
-    filter(onChangeHousingGuests).
-    filter(onChangeHousingFeatures);
+    resultFilteredArray = adverts.filter(function (element) {
+      return onChangeHousingType(element) &&
+             onChangeHousingPrice(element) &&
+             onChangeHousingRooms(element) &&
+             onChangeHousingGuests(element) &&
+             onChangeHousingFeatures(element);
+    });
 
     window.pin.render(resultFilteredArray);
   });
